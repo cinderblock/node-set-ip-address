@@ -21,12 +21,7 @@ exports.configure = async (configs) => {
       if (Array.isArray(c.bridge_ports))
         throw new Error(`VLAN ${c.vlanid} in "${c.interface}" cannot have bridged interfaces`)
 
-      var ifname = `${c.interface}.${c.vlanid}`
-      if (ifname.length > 15) {
-        var i = ifname.length - 15
-        ifname = ifname.substring(i)
-      }
-      c.ifname = ifname
+      c.ifname ??= `${c.interface}.${c.vlanid}`.slice(-15)
     }
     if (Array.isArray(c.bridge_ports)) {
       c.bridge_ports.forEach(p => {
