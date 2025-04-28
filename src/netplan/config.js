@@ -19,7 +19,14 @@ exports.generate = (currentConfig, interfaceConfig) => {
   if (interfaceConfig.optional)
     config.optional = true
 
-  if (interfaceConfig.ip_address && !interfaceConfig.dhcp) {
+  // Improved logic for manual, dhcp, and static assignment
+  if (interfaceConfig.manual) {
+    // No IP assignment for manual mode
+    // Do not set dhcp4, dhcp6, or addresses
+  } else if (interfaceConfig.dhcp) {
+    config.dhcp4 = true
+    config['dhcp-identifier'] = 'mac'
+  } else if (interfaceConfig.ip_address) {
     config.dhcp4 = false
     config.dhcp6 = false
     config.addresses = [trim_ip_address(interfaceConfig.ip_address) + '/' + interfaceConfig.prefix]
@@ -43,8 +50,7 @@ exports.generate = (currentConfig, interfaceConfig) => {
     if (interfaceConfig.gateway)
       config.routes = [{ to: 'default', via: interfaceConfig.gateway }]
   } else {
-    config.dhcp4 = true
-    config['dhcp-identifier'] = 'mac'
+    throw new Error(`Invalid configuration for interface ${iface}: ${JSON.stringify(interfaceConfig)}`)
   }
 
   if (!is_vlan) {
