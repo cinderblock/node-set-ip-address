@@ -33,7 +33,7 @@ exports.configure = async (configs) => {
     var c = Object.assign({}, cfg)
     return async () => {
 
-      var iface = typeof cfg.vlanid == 'number'
+      var iface = cfg.ifname ?? typeof cfg.vlanid == 'number'
         ? `${cfg.interface}.${cfg.vlanid}`
         : cfg.interface
 
