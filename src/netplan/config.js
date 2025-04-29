@@ -21,8 +21,9 @@ exports.generate = (currentConfig, interfaceConfig) => {
 
   // Improved logic for manual, dhcp, and static assignment
   if (interfaceConfig.manual) {
+    config.dhcp4 = false
+    config.dhcp6 = false
     // No IP assignment for manual mode
-    // Do not set dhcp4, dhcp6, or addresses
   } else if (interfaceConfig.dhcp) {
     config.dhcp4 = true
     config['dhcp-identifier'] = 'mac'
